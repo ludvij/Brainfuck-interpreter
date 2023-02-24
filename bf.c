@@ -28,9 +28,9 @@ char* loadSource(FILE* f) {
 	return src;
 }
 
-
-uint8_t memory[MEM_SIZE] = {0};
-int index = 0;
+// normally I would use something like uint8_t memory[MEM_SIZE] = {0}
+// but this simplifies the code albeit the wonky initialisation
+uint8_t* memory;
 
 int interpret(char* src, int charIndex, bool execute) {
 	char nextChar = '\0';
@@ -38,22 +38,17 @@ int interpret(char* src, int charIndex, bool execute) {
 	int startIndex = charIndex;
 	do {
 		nextChar = src[charIndex];
-		     if (execute && nextChar == '+') memory[index]++;             // increment memory
-		else if (execute && nextChar == '-') memory[index]--;             // decrement memory
-		else if (execute && nextChar == '>') index++;                     // increment pointer
-		else if (execute && nextChar == '<') index--;                     // decrement pointer
-		else if (execute && nextChar == '.') printf("%c", memory[index]); // print
-		else if (execute && nextChar == ',') {                            // read
-			if (scanf("%c", &memory[index]) == 0) {
-				printf("Error while reading\n");
-			}
-			printf("%c\n", memory[index]);
+		     if (execute && nextChar == '+') ++*memory;             // increment memory
+		else if (execute && nextChar == '-') --*memory;             // decrement memory
+		else if (execute && nextChar == '>') ++memory;              // increment pointer
+		else if (execute && nextChar == '<') --memory;              // decrement pointer
+		else if (execute && nextChar == '.') putchar(*memory);      // print
+		else if (execute && nextChar == ',') memory[0] = getchar(); // read
+		else if (nextChar == '[') {                                 // jump if zero
+			charIndex = interpret(src, charIndex + 1, *memory);
 		}
-		else if (nextChar == '[') {                                       // jump if zero
-			charIndex = interpret(src, charIndex + 1, memory[index] != 0);
-		}
-		else if (nextChar == ']') {                                       // jump if not zero
-			if (memory[index] == 0) {
+		else if (nextChar == ']') {                                 // jump if not zero
+			if (!*memory) {
 				return charIndex;
 			}
 			else {
@@ -73,7 +68,14 @@ int main(int argc, char** argv) {
 	}
 	FILE* f = fopen(argv[1], "r");
 	char* src = loadSource(f);
+	// init memory
+	memory = malloc(sizeof *memory * MEM_SIZE);
+	for (int i= 0; i < MEM_SIZE; i++) memory[i] = 0;
+
 	interpret(src, 0, true);
+
+	// no need to be freed
+	// free(memory);
 	free(src);
 	fclose(f);
 }

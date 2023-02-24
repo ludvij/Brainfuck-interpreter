@@ -1,6 +1,6 @@
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -std=c11 -O3
-EXE = bf.exe
+EXE = bf
 
 all: $(EXE)
 
