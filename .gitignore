@@ -4,4 +4,5 @@
 *.png
 bf
 bf2c
+*.bf.c
 *.out
