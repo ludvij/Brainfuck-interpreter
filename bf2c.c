@@ -65,8 +65,6 @@ int main(int argc, char** argv) {
 
 	transpile(src, argc > 2 ? argv[2] : strcat(argv[1], ".c"));
 
-	// no need to be freed
-	// free(memory);
 	free(src);
 	fclose(f);
 }

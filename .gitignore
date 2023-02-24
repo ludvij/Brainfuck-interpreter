@@ -5,4 +5,5 @@
 bf
 bf2c
 *.bf.c
+*.b.c
 *.out
