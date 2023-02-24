@@ -70,12 +70,12 @@ int main(int argc, char** argv) {
 	char* src = loadSource(f);
 	// init memory
 	memory = malloc(sizeof *memory * MEM_SIZE);
+	uint8_t* tmp = memory;
 	for (int i= 0; i < MEM_SIZE; i++) memory[i] = 0;
 
 	interpret(src, 0, true);
 
-	// no need to be freed
-	// free(memory);
+	free(tmp);
 	free(src);
 	fclose(f);
 }

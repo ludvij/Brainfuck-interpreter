@@ -1,8 +1,12 @@
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -std=c11 -O3
-EXE = bf
+INTERPRET = bf
+TRANSPILER = bf2c
 
-all: $(EXE)
+all: $(INTERPRET) $(TRANSPILER)
 
-$(EXE): bf.c
-	$(CC) $(FLAGS) -o $(EXE) $^
+$(INTERPRET): bf.c
+	$(CC) $(FLAGS) -o $@ $^
+
+$(TRANSPILER): bf2c.c
+	$(CC) $(FLAGS) -o $@ $^
